@@ -14,4 +14,4 @@ A lightweight GTK-based tool for managing and executing command queues on Linux.
 ## Running
 
 ```bash
-PYTHONPATH=src python3 src/runstack/main.py
+PYTHONPATH=src python3 src/orcstrate/main.py
