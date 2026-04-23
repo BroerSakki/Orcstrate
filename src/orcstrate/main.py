@@ -1,14 +1,30 @@
-import gi
-gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from core.runner import CommandRunner
+from core.command import Command
 
-from orcstrate.ui.window import MainWindow
+runner = CommandRunner()
+commands = [
+    Command("echo '=== START ==='"),
 
-def main():
-    win = MainWindow()
-    win.connect("destroy", Gtk.main_quit)
-    win.show_all()
-    Gtk.main()
+    # Quick internal
+    Command("echo 'Running internal command 1'"),
 
-if __name__ == "__main__":
-    main()
+    # External long-running (you should see a new terminal)
+    Command("sleep 5", external=True),
+
+    # Internal after external (should NOT wait for it)
+    Command("echo 'Back to internal flow'"),
+
+    # Another external
+    Command("ping -c 4 google.com", external=True),
+
+    # Simulate work
+    Command("sleep 2"),
+
+    # Failure case
+    Command("ls /this/does/not/exist"),
+
+    # Final
+    Command("echo '=== END ==='")
+]
+
+runner.run_all(commands)
