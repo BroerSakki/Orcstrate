@@ -35,14 +35,19 @@ class CommandRunner:
 
         return process
 
-    def run_external(self, cmd):
+    def run_external(self, cmd, keep_open=True):
         print(f"[EXTERNAL] {cmd}")
-
+    
+        if keep_open:
+            full_cmd = f"{cmd}; echo '\\n[Process finished]'; exec bash"
+        else:
+            full_cmd = cmd
+    
         process = subprocess.Popen(
-            ["xfce4-terminal", "-e", f'bash -c "{cmd}"'],
+            ["xfce4-terminal", "-e", f'bash -c "{full_cmd}"'],
             env=self.clean_env()
         )
-
+    
         self.processes.append(process)
         return process
     #---
