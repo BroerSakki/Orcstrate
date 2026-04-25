@@ -13,4 +13,5 @@ commands = [
     Command("echo '=== END ==='")
 ]
 
-runner.run_all(commands)
+runner.load_commands(commands)
+runner.run_queue()

@@ -1,9 +1,11 @@
 import os
 import subprocess
+from collections import deque
 
 class CommandRunner:
     def __init__(self):
-        self.processes = []  # for tracking later
+        self.processes = []
+        self.queue = deque()
 
     # Sanitize environment
     # ---
@@ -54,10 +56,27 @@ class CommandRunner:
 
     # Main runner
     # ---
-    def run_all(self, commands):
-        for cmd in commands:
+    def run_queue(self):
+        while self.queue:
+
+            cmd = self.queue.popleft()
+
             if cmd.external:
-                self.run_external(cmd.command)
+                self.run_external(cmd.command, keep_open=cmd.keep_open)
             else:
                 self.run_internal(cmd.command)    
+    # ---
+
+    # Queue management
+    # ---
+    def add_to_queue(self, command):
+        self.queue.append(command)
+
+    def clear_queue(self):
+        self.queue.clear()
+
+    def load_commands(self, commands):
+        self.clear_queue()
+        for cmd in commands:
+            self.add_to_queue(cmd)
     # ---
