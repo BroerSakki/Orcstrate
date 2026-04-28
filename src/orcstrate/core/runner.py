@@ -1,11 +1,16 @@
 import os
 import subprocess
+import threading
+import time
 from collections import deque
 
 class CommandRunner:
     def __init__(self):
         self.processes = []
         self.queue = deque()
+
+        self._running = False
+        self._puased = False
 
     # Sanitize environment
     # ---
@@ -74,6 +79,12 @@ class CommandRunner:
 
     def clear_queue(self):
         self.queue.clear()
+
+    def queue_size(self):
+        return len(self.queue)
+
+    def peek_queue(self):
+        return list(self.queue)
 
     def load_commands(self, commands):
         self.clear_queue()
