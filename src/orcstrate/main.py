@@ -1,5 +1,6 @@
 from core.runner import CommandRunner
 from core.command import Command
+import time
 
 runner = CommandRunner()
 commands = [
@@ -14,4 +15,11 @@ commands = [
 ]
 
 runner.load_commands(commands)
-runner.run_queue()
+
+runner.add_to_queue(Command("echo start"))
+runner.run_queue(True)
+
+
+time.sleep(1)
+
+runner.add_to_queue(Command("echo added later"))
