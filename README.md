@@ -9,7 +9,7 @@ A lightweight GTK-based tool for managing and executing command queues on Linux.
 
 ## Requirements
 - Python 3
-- GTK 3 (PyGObject)
+- GTK 4 (PyGObject)
 
 ## Setup
 
