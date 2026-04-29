@@ -14,7 +14,7 @@ A lightweight GTK-based tool for managing and executing command queues on Linux.
 ## Setup
 
 ```bash
-git clone <repo>
+git clone https://github.com/BroerSakki/Orcstrate.git
 cd Orcstrate
 ./scripts/setup.sh
 ```
