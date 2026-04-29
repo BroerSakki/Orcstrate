@@ -3,7 +3,7 @@ import subprocess
 import threading
 import time
 from collections import deque
-from core.command import Command
+from models.command import Command
 
 class CommandRunner:
     # Constructer
