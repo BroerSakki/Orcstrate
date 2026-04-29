@@ -17,8 +17,10 @@ A lightweight GTK-based tool for managing and executing command queues on Linux.
 git clone <repo>
 cd Orcstrate
 ./scripts/setup.sh
+```
 
 ## Running
 
 ```bash
 PYTHONPATH=src python3 src/orcstrate/main.py
+```
