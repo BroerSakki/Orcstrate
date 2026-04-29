@@ -11,6 +11,13 @@ A lightweight GTK-based tool for managing and executing command queues on Linux.
 - Python 3
 - GTK 3 (PyGObject)
 
+## Setup
+
+```bash
+git clone <repo>
+cd Orcstrate
+./scripts/setup.sh
+
 ## Running
 
 ```bash
