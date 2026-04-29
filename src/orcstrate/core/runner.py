@@ -102,7 +102,11 @@ class CommandRunner:
     # Worker management
     # ---
     def _run_worker(self):
-        print("[INFO] Worker started\n")
+        if self._running:
+            print("[INFO] Worker started\n")
+        else:
+            print("[INFO] Worker disconnected")
+
         while self._running:
 
             while self._paused:
@@ -118,6 +122,8 @@ class CommandRunner:
                 self.run_external(cmd.command, keep_open=cmd.keep_open)
             else:
                 self.run_internal(cmd.command)
+
+            print("---")
 
         print("[INFO] Worker stopped")
     # ---
@@ -140,6 +146,7 @@ class CommandRunner:
         if manual:
             input()
             self.stop()
+            self._run_worker()
         else:
             while self._running or self.queue:
                 time.sleep(0.1)
