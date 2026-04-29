@@ -1,5 +1,5 @@
 from core.runner import CommandRunner
-from core.command import Command
+from models.command import Command
 import time
 
 runner = CommandRunner()
