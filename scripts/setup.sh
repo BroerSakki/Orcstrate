@@ -18,7 +18,7 @@ echo "[INFO] Installing dependencies..."
 sudo apt install -y \
     python3 \
     python3-gi \
-    gir1.2-gtk-3.0 \
+    gir1.2-gtk-4.0 \
     xfce4-terminal
 
 echo "[INFO] Setup complete! You can now run the project."
