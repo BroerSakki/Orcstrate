@@ -13,7 +13,7 @@ class CommandRunner:
         self.queue: deque[Command] = deque()
 
         self._running = False
-        self._puased = False
+        self._paused = False
     # ---
 
     # Sanitize environment
@@ -50,7 +50,7 @@ class CommandRunner:
         print(f"[EXTERNAL] {cmd}")
     
         if keep_open:
-            full_cmd:str = f"{cmd}; echo '\\n[Process finished]'; exec bash"
+            full_cmd:str = f"{cmd}; echo '\n[Process finished]'; exec bash"
         else:
             full_cmd:str = cmd
     
@@ -67,13 +67,16 @@ class CommandRunner:
     # ---
     def run_queue(self):
         if self._running:
-            print("[INFO] Queue already running")
+            print("[INFO] Already running")
             return
+        else:
+            print("[INFO] Starting worker")
 
         self._running = True
 
-        thread:threading.Thread = threading.Thread(target=self._run_worker)
-        thread.start()   
+        thread = threading.Thread(target=self._run_worker)
+        thread.daemon = True
+        thread.start()
     # ---
 
     # Queue management
@@ -84,10 +87,10 @@ class CommandRunner:
     def clear_queue(self):
         self.queue.clear()
 
-    def queue_size(self):
+    def queue_size(self) -> int:
         return len(self.queue)
 
-    def peek_queue(self):
+    def peek_queue(self) -> deque[Command]:
         return list(self.queue)
 
     def load_commands(self, commands: list[Command]):
@@ -99,12 +102,15 @@ class CommandRunner:
     # Worker management
     # ---
     def _run_worker(self):
-        while self.queue:
-            if not self._running:
-                break
+        print("[INFO] Worker started\n")
+        while self._running:
 
-            while self._puased:
+            while self._paused:
                 time.sleep(0.1)
+
+            if not self.queue:
+                time.sleep(0.1)
+                continue
 
             cmd:Command = self.queue.popleft()
 
@@ -113,5 +119,28 @@ class CommandRunner:
             else:
                 self.run_internal(cmd.command)
 
+        print("[INFO] Worker stopped")
+    # ---
+
+    # Runtime management
+    # ---
+    def pause(self):
+        print("[INFO] Pausing worker")
+        self._paused = True
+
+    def resume(self):
+        print("[INFO] Resuming worker")
+        self._paused = False
+
+    def stop(self):
+        print("[INFO] Stopping worker")
         self._running = False
+
+    def wait_until_done(self, manual: bool = False):
+        if manual:
+            input()
+            self.stop()
+        else:
+            while self._running or self.queue:
+                time.sleep(0.1)
     # ---
