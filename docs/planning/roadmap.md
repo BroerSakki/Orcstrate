@@ -1,12 +1,12 @@
 # Orcstrate Project Roadmap (Modular Development Plan)
 
-## 🎯 Project Goal
+## Project Goal
 
 Build a Linux-focused GTK application that manages and executes command workflows, while demonstrating core Data Structures & Algorithms concepts.
 
 ---
 
-# 🧱 CURRENT STATE (What’s Done)
+# CURRENT STATE (What’s Done)
 
 ## Core Engine
 
@@ -22,30 +22,30 @@ Build a Linux-focused GTK application that manages and executes command workflow
 
 ---
 
-# 🚧 IN PROGRESS / PARTIALLY DONE
+# IN PROGRESS
 
 ## Execution System
 
-* [ ] Threaded execution (to prevent GTK freeze)
+* [x] Threaded execution (to prevent GTK freeze)
 * [ ] Process tracking (start/stop status)
 * [ ] External process lifecycle awareness (optional)
 
 ---
 
-# 🧠 DATA STRUCTURES (CORE REQUIREMENTS)
+# DATA STRUCTURES (CORE REQUIREMENTS)
 
 ## 1. Queue (DONE, refine later)
 
 * [x] FIFO execution using deque
 * [ ] Ability to:
 
-  * [ ] Add while running
-  * [ ] Pause/resume queue
+  * [x] Add while running
+  * [x] Pause/resume queue
   * [ ] Inspect queue state (for UI)
 
 ---
 
-## 2. Stack (UNDO SYSTEM) 🔥 HIGH PRIORITY
+## 2. Stack (UNDO SYSTEM) - HIGH PRIORITY
 
 Implement command history:
 
@@ -62,7 +62,7 @@ Implement command history:
 
 ---
 
-## 3. Hash Table (REGISTRY) 🔥 HIGH PRIORITY
+## 3. Hash Table (REGISTRY) - HIGH PRIORITY
 
 Implement command/project lookup:
 
@@ -77,7 +77,7 @@ Implement command/project lookup:
 
 ---
 
-## 4. Searching 🔍
+## 4. Searching
 
 * [ ] Search commands by name
 * [ ] Filter command list in UI
@@ -88,7 +88,7 @@ Implement command/project lookup:
 
 ---
 
-## 5. Sorting 🔃
+## 5. Sorting
 
 * [ ] Sort commands:
 
@@ -107,7 +107,7 @@ Only if time allows:
 
 ---
 
-# 🖥️ GUI (GTK) DEVELOPMENT
+# GUI (GTK) DEVELOPMENT
 
 ## Phase 1: Basic UI
 
@@ -135,7 +135,7 @@ Only if time allows:
 
 ---
 
-# 🔌 INTEGRATION TASKS
+# INTEGRATION TASKS
 
 ## Runner ↔ UI
 
@@ -149,7 +149,7 @@ Only if time allows:
 
 ---
 
-# 🧪 TESTING
+# TESTING
 
 * [ ] Test sequential execution
 * [ ] Test parallel execution
@@ -159,9 +159,9 @@ Only if time allows:
 
 ---
 
-# 📦 PROJECT FEATURES (FINAL GOAL)
+# PROJECT FEATURES (FINAL GOAL)
 
-## Minimum Viable Product (MVP)
+## Minimum Viable Product
 
 * Command queue execution
 * External/internal toggle
@@ -180,7 +180,7 @@ Only if time allows:
 
 ---
 
-# 🧠 REPORT / ACADEMIC MAPPING
+# REPORT / ACADEMIC MAPPING
 
 | Concept    | Where Used                    |
 | ---------- | ----------------------------- |
@@ -190,16 +190,5 @@ Only if time allows:
 | Searching  | Command filtering             |
 | Sorting    | Command organization          |
 | AVL Tree   | (Optional) structured storage |
-
----
-
-# 🧩 DESIGN PRINCIPLE
-
-Keep everything modular:
-
-* Command → data
-* Runner → execution
-* Registry → storage (hash table)
-* UI → interaction
 
 ---
