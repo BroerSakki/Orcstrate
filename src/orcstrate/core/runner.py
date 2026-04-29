@@ -65,22 +65,18 @@ class CommandRunner:
 
     # Main runner
     # ---
-    def run_queue(self, manual:bool = False):
+    def run_queue(self):
         if self._running:
             print("[INFO] Already running")
             return
         else:
             print("[INFO] Starting worker")
-            if manual:
-                print("[INFO] Press Enter to stop...\n")
 
         self._running = True
-
 
         thread = threading.Thread(target=self._run_worker)
         thread.daemon = True
         thread.start()
-        self.wait_until_done(manual)
     # ---
 
     # Queue management
@@ -106,7 +102,7 @@ class CommandRunner:
     # Worker management
     # ---
     def _run_worker(self):
-        print("[INFO] Worker started")
+        print("[INFO] Worker started\n")
         while self._running:
 
             while self._paused:
@@ -116,7 +112,7 @@ class CommandRunner:
                 time.sleep(0.1)
                 continue
 
-            cmd = self.queue.popleft()
+            cmd:Command = self.queue.popleft()
 
             if cmd.external:
                 self.run_external(cmd.command, keep_open=cmd.keep_open)

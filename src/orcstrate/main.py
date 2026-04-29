@@ -16,10 +16,14 @@ commands = [
 
 runner.load_commands(commands)
 
-runner.add_to_queue(Command("echo start"))
-runner.run_queue(True)
+print("[INFO] Press Enter to stop...\n")
+
+runner.add_to_queue(Command("echo thingymajiggle"))
+runner.run_queue()
 
 
 time.sleep(1)
 
 runner.add_to_queue(Command("echo added later"))
+
+runner.wait_until_done(True)
