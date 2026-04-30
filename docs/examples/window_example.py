@@ -61,6 +61,12 @@ class MainWindow(Gtk.ApplicationWindow):
         self.root.append(menu_btn)
         # ---
 
+        # SearchEntry
+        # ---
+        self.search_entry = Gtk.SearchEntry()
+        self.root.append(self.search_entry)
+        # ---
+
     def on_submit(self, widget):
         text = self.entry.get_text()
         self.output.set_text(f"You typed: {text}")
