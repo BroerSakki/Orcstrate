@@ -21,7 +21,7 @@ cd Orcstrate
 
 ### Windows
 1. Install [MSYS2](https://www.msys2.org/) (Follow [this](https://www.gtk.org/docs/installations/windows) tutorial for more detailed steps)
-2. Run these commands in the MSYS2 shell (The UCRT64 one)
+2. Run these commands in the MSYS2 shell (The UCRT64 one) PS. I reccommend adding UCRT64 to windows terminal as a profile for ease of use. Stack overflow tutorial [here](https://stackoverflow.com/questions/71045716/adding-msys-to-windows-terminal)
 ```
 pacman -S mingw-w64-ucrt-x86_64-gtk4
 pacman -S mingw-w64-ucrt-x86_64-python-gobject
