@@ -1,5 +1,6 @@
 import os
 import subprocess
+import platform
 import threading
 import time
 from collections import deque
@@ -48,17 +49,27 @@ class CommandRunner:
 
     def run_external(self, cmd:str, keep_open:bool=True):
         print(f"[EXTERNAL] {cmd}")
-    
+
+        os_name = platform.system()
+
         if keep_open:
-            full_cmd:str = f"{cmd}; echo '\n[Process finished]'; exec bash"
+            full_cmd:str = f"{cmd}; echo -e '\n[Process finished]'; read"
         else:
             full_cmd:str = cmd
-    
-        process:subprocess.Popen = subprocess.Popen(
-            ["xfce4-terminal", "-e", f'bash -c "{full_cmd}"'],
-            env=self.clean_env()
+
+        if os_name == "Windows":
+            terminal = "mintty"
+            terminal_args = ["-e", "bash", "-c", full_cmd]
+        else:
+            terminal = "xfce4-terminal"
+            terminal_args = ["-e", f"bash -c '{full_cmd}'"]
+
+        process = subprocess.Popen(
+            [terminal] + terminal_args,
+            env=self.clean_env(),
+            shell=False
         )
-    
+
         self.processes.append(process)
         return process
     #---
