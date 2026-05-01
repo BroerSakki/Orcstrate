@@ -18,6 +18,12 @@ class MainWindow(Gtk.ApplicationWindow):
         
         # List Search Widget
         # ---
+        """
+        The commands passed here should come from a file storing entered commands
+        For now we can just not pass any initial commands, meaning entered commands reset when the app closes.
+        
+        It's not an essential feature, so can add later on if we get time
+        """
         ListSearchWidget(self.root, commands)
         # ---
     # ---
