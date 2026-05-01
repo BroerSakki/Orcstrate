@@ -25,6 +25,7 @@ cd Orcstrate
 ```
 pacman -S mingw-w64-ucrt-x86_64-gtk4
 pacman -S mingw-w64-ucrt-x86_64-python-gobject
+pacman -S mingw-w64-ucrt-x86_64-glib2
 ```
 PS. We don't use xfce4-terminal here, but instead mintty, since it already comes pre-installed with MSYS2. Also I can't find xfce4-terminal anywhere for MSYS2 :)
 
