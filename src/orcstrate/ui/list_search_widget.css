@@ -7,51 +7,6 @@
     --field-hover: rgba(0, 0, 0, 0.08);
 }
 
-/* 2. Overwrite variables for Dark Mode */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --row-hover: rgba(255, 255, 255, 0.05);
-        --cmd-text: #eeeeec;
-        --tag-bg: #353535;
-        --tag-text: #b3b3b3;
-        --field-hover: rgba(255, 255, 255, 0.1);
-    }
-}
-
-/* --- DARK MODE GLOW EFFECTS --- */
-@media (prefers-color-scheme: dark) {
-    /* Base button style for dark mode (dark background) */
-    .sidebar button {
-        background-color: #1e1e1e;
-        color: #eeeeec;
-		border: 1px solid transparent; /* Placeholder for glow */
-    }
-
-    /* Green Glow for the Queue Button (suggested-action) */
-    .sidebar button.suggested-action {
-        border: 1px solid rgba(38, 162, 105, 0.4);
-        box-shadow: 0 0 8px rgba(38, 162, 105, 0.2);
-    }
-    
-    .sidebar button.suggested-action:hover {
-        background-color: #242424;
-        border: 1px solid rgba(38, 162, 105, 0.8);
-        box-shadow: 0 0 12px rgba(38, 162, 105, 0.4);
-    }
-
-    /* Red Glow for the Delete Button (destructive-action) */
-    .sidebar button.destructive-action {
-        border: 1px solid rgba(224, 27, 36, 0.4);
-        box-shadow: 0 0 8px rgba(224, 27, 36, 0.2);
-    }
-
-    .sidebar button.destructive-action:hover {
-        background-color: #242424;
-        border: 1px solid rgba(224, 27, 36, 0.8);
-        box-shadow: 0 0 12px rgba(224, 27, 36, 0.4);
-    }
-}
-
 /* The sidebar buttons */
 .sidebar button {
 	margin-bottom: 8px;
@@ -124,4 +79,42 @@ listview row:selected .command-row {
 listview row:selected .tag-field {
     background-color: rgba(255,255,255,0.2);
     color: white;
+}
+
+/* 2. DARK MODE OVERRIDES (Bottom of file) */
+.dark-mode {
+    --row-hover: rgba(255, 255, 255, 0.05);
+    --cmd-text: #eeeeec;
+    --tag-bg: #353535;
+    --tag-text: #b3b3b3;
+    --field-hover: rgba(255, 255, 255, 0.1);
+}
+
+/* Glow effects for dark mode */
+.dark-mode .sidebar button {
+    background-color: #1e1e1e;
+    color: #eeeeec;
+    border: 1px solid transparent;
+}
+
+.dark-mode .sidebar button.suggested-action {
+    border: 1px solid rgba(38, 162, 105, 0.4);
+    box-shadow: 0 0 8px rgba(38, 162, 105, 0.2);
+    background: #1e1e1e; /* Overriding the solid green */
+}
+
+.dark-mode .sidebar button.suggested-action:hover {
+    border: 1px solid rgba(38, 162, 105, 0.8);
+    box-shadow: 0 0 12px rgba(38, 162, 105, 0.4);
+}
+
+.dark-mode .sidebar button.destructive-action {
+    border: 1px solid rgba(224, 27, 36, 0.4);
+    box-shadow: 0 0 8px rgba(224, 27, 36, 0.2);
+    background: #1e1e1e;
+}
+
+.dark-mode .sidebar button.destructive-action:hover {
+    border: 1px solid rgba(224, 27, 36, 0.8);
+    box-shadow: 0 0 12px rgba(224, 27, 36, 0.4);
 }
