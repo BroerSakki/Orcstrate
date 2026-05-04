@@ -3,4 +3,4 @@ class Command:
         self.command:str = command
         self.external:bool = external
         self.keep_open:bool = keep_open
-        self.name:str = name or command
+        self.name:str = name or command # Pre-process for hashing
