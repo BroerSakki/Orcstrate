@@ -27,3 +27,6 @@ time.sleep(1)
 runner.add_to_queue(Command("echo added later"))
 
 runner.wait_until_done(True)
+
+app = App(commands)
+app.run()
