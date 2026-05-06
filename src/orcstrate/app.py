@@ -47,7 +47,7 @@ def update_theme_class(window):
 class App(Gtk.Application):
     # Constructor
     # ---
-    def __init__(self, commands: list[Command]):
+    def __init__(self, commands: list[Command]=[]):
         super().__init__(application_id="com.orcstrate.app")
         self.commands = commands
     # ---
