@@ -53,21 +53,23 @@ class CommandRunner:
         os_name = platform.system()
 
         if keep_open:
-            full_cmd:str = f"{cmd}; echo -e '\n[Process finished]'; read"
+            full_cmd:str = f"{cmd}; echo '\n[Process finished]'; exec bash"
         else:
             full_cmd:str = cmd
 
         if os_name == "Windows":
+            print("[INFO] Mintty Terminal")
             terminal = "mintty"
             terminal_args = ["-e", "bash", "-c", full_cmd]
         else:
+            print("[INFO] XFCE Terminal")
             terminal = "xfce4-terminal"
-            terminal_args = ["-e", f"bash -c '{full_cmd}'"]
+            terminal_args = ["-e", f'bash -c "{full_cmd}"']
 
+        print(f"[INFO] Running {[terminal] + terminal_args}")
         process = subprocess.Popen(
             [terminal] + terminal_args,
             env=self.clean_env(),
-            shell=False
         )
 
         self.processes.append(process)
