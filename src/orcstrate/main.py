@@ -8,7 +8,7 @@ commands = [
     Command("echo 'Running internal command 1'"),
     Command("sleep 5", external=True),
     Command("echo 'Back to internal flow'"),
-    Command("ping -c 4 google.com", external=True),
+    Command("ping -c 4 google.com", external=True, keep_open=False),
     Command("sleep 2"),
     Command("ls /this/does/not/exist"),
     Command("echo '=== END ==='")
