@@ -3,6 +3,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Gdk", "4.0")
 gi.require_version("Gio", "2.0")
 from gi.repository import Gtk, Gio, GObject, Gdk
+from ui.widgets.scroll_widget import ListScrollWidget
+from ui.widgets.sidebar_widget import SideBarWidget
 from models.command import Command
 
 """
@@ -79,42 +81,48 @@ class ListSearchWidget:
 		# Scroll
 		# Add better css here
 		# ---
-		self.scroll = Gtk.ScrolledWindow()
-		self.scroll.set_propagate_natural_height(True)
-		self.scroll.set_hexpand(True)
-		self.scroll.set_vexpand(True)
-		self.scroll.set_child(self.list_view)
+		#self.scroll = Gtk.ScrolledWindow()
+		#self.scroll.set_propagate_natural_height(True)
+		#self.scroll.set_hexpand(True)
+		#self.scroll.set_vexpand(True)
+		#self.scroll.set_child(self.list_view)
+
+		ListScrollWidget(self.root, commands)
+
 		# ---
 
+		
+
 		# Sidebar for buttons
+		SideBarWidget(root, commands)
 		# ---
-		sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-		sidebar.set_size_request(150, -1)
-		sidebar.add_css_class("sidebar") # Optional: style with CSS later
-		sidebar.set_margin_end(10)
+		#sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+		#sidebar.set_size_request(150, -1)
+		#sidebar.add_css_class("sidebar") # Optional: style with CSS later
+		#sidebar.set_margin_end(10)
 		# ---
 		# Add Button
 		# ---
-		add_btn = Gtk.Button(label="Add Command", icon_name="list-add-symbolic")
-		add_btn.connect("clicked", self.on_add_clicked)
+		#add_btn = Gtk.Button(label="Add Command", icon_name="list-add-symbolic")
+		#add_btn.connect("clicked", self.on_add_clicked)
 		# ---
 		# Delete Button
 		# ---
-		self.del_btn = Gtk.Button(label="Delete Selected", icon_name="user-trash-symbolic")
-		self.del_btn.add_css_class("destructive-action")
-		self.del_btn.connect("clicked", self.on_delete_selected)
+		#self.del_btn = Gtk.Button(label="Delete Selected", icon_name="user-trash-symbolic")
+		#self.del_btn.add_css_class("destructive-action")
+		#self.del_btn.connect("clicked", self.on_delete_selected)
 		# ---
 		# Add To Queue
 		# ---
-		self.add_queue_btn = Gtk.Button(label="Add To Queue", icon_name="go-next-symbolic")
-		self.add_queue_btn.add_css_class("suggested-action")
-		self.add_queue_btn.connect("clicked", self.on_add_queue_clicked)
+		#self.add_queue_btn = Gtk.Button(label="Add To Queue", icon_name="go-next-symbolic")
+		#self.add_queue_btn.add_css_class("suggested-action")
+		#self.add_queue_btn.connect("clicked", self.on_add_queue_clicked)
 		# ---
 		# Add Buttons to sidebar
 		# ---
-		sidebar.append(add_btn)
-		sidebar.append(self.del_btn)
-		sidebar.append(self.add_queue_btn)
+		#sidebar.append(add_btn)
+		#sidebar.append(self.del_btn)
+		#sidebar.append(self.add_queue_btn)
 		# ---
 
 		# Append to root
@@ -177,10 +185,10 @@ class ListSearchWidget:
 		self.workspace.save()
 
 	def on_save_as_clicked(self):
-	    path = self.file_dialog.save()
+		path = self.file_dialog.save()
 	
-	    if path:
-	        self.workspace.save_as(path)
+		if path:
+			self.workspace.save_as(path)
 
 	def setup_list_item(self, factory, list_item):
 		box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
