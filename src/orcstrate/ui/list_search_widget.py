@@ -119,6 +119,7 @@ class ListSearchWidget:
 
 		# Append to root
 		# ---
+		main_hbox.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
 		main_hbox.append(self.search_entry)
 		content_hbox.append(self.scroll)
 		content_hbox.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
@@ -153,11 +154,6 @@ class ListSearchWidget:
 
 	def on_delete_selected(self, btn):
 		"""Remove selected item"""
-		#selected_index = self.selection.get_selected()
-		#print(selected_index)
-		#if selected_index != Gtk.INVALID_LIST_POSITION:
-		#	self.list_store.remove(selected_index)
-
 		selected_item = self.selection.get_selected_item()
 		if selected_item:
 			found, index = self.list_store.find(selected_item)
