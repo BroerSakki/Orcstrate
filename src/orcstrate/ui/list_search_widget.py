@@ -4,6 +4,7 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gio", "2.0")
 from gi.repository import Gtk, Gio, GObject, Gdk
 from models.command import Command
+from ui.queue_widget import QueueWidget
 
 """
 This acts as an example and tutorial for developing future widgets
@@ -23,7 +24,7 @@ Remember to HAVE FUN :)
 class ListSearchWidget:
 	# Constructor
 	# ---
-	def __init__(self, root, commands: list[Command]):
+	def __init__(self, commands: list[Command], queue_ref):
 		# Css
 		# ---
 		css_provider = Gtk.CssProvider()
@@ -37,7 +38,7 @@ class ListSearchWidget:
 
 		# Widget Containers
 		# ---
-		main_hbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+		self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 		content_hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=6)
 		# ---
 
@@ -86,6 +87,8 @@ class ListSearchWidget:
 		self.scroll.set_child(self.list_view)
 		# ---
 
+		self.queue_ref = queue_ref
+
 		# Sidebar for buttons
 		# ---
 		sidebar = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -119,14 +122,16 @@ class ListSearchWidget:
 
 		# Append to root
 		# ---
-		main_hbox.append(self.search_entry)
+		self.main_hbox.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
+		self.main_hbox.append(self.search_entry)
 		content_hbox.append(self.scroll)
 		content_hbox.append(Gtk.Separator(orientation=Gtk.Orientation.VERTICAL))
 		content_hbox.append(sidebar)
-		main_hbox.append(content_hbox)
-
-		root.append(main_hbox)
+		self.main_hbox.append(content_hbox)
 		# ---
+
+	def __call__(self):
+		return self.main_hbox
 
 	class CommandObj(GObject.Object):
 		# Command Variables
@@ -140,9 +145,12 @@ class ListSearchWidget:
 		def __init__(self,command: Command):
 			super().__init__()
 			self.command_text = command.command
-			self.search_tag = command.name.lower() # Should we make this case sensitive or no?
+			self.search_tag = command.name # Should we make this case sensitive or no?
 			self.external = command.external
 			self.keep_open = command.keep_open
+
+		def get_command(self):
+			return Command(self.command_text, self.external, self.keep_open, self.search_tag)
 
 	def on_add_clicked(self, btn):
 		"""Appends a new blank command to the store."""
@@ -153,11 +161,6 @@ class ListSearchWidget:
 
 	def on_delete_selected(self, btn):
 		"""Remove selected item"""
-		#selected_index = self.selection.get_selected()
-		#print(selected_index)
-		#if selected_index != Gtk.INVALID_LIST_POSITION:
-		#	self.list_store.remove(selected_index)
-
 		selected_item = self.selection.get_selected_item()
 		if selected_item:
 			found, index = self.list_store.find(selected_item)
@@ -166,6 +169,9 @@ class ListSearchWidget:
 
 	def on_add_queue_clicked(self, btn):
 		"""Needs to be added"""
+		selected_item = self.selection.get_selected_item()
+		if selected_item:
+			self.queue_ref.add_command(selected_item.get_command())
 
 	def on_load_clicked(self):
 		path = self.file_dialog.open()
@@ -177,10 +183,10 @@ class ListSearchWidget:
 		self.workspace.save()
 
 	def on_save_as_clicked(self):
-	    path = self.file_dialog.save()
+		path = self.file_dialog.save()
 	
-	    if path:
-	        self.workspace.save_as(path)
+		if path:
+			self.workspace.save_as(path)
 
 	def setup_list_item(self, factory, list_item):
 		box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)

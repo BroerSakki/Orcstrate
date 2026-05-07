@@ -2,6 +2,7 @@ import gi
 gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk
 from ui.list_search_widget import ListSearchWidget
+from ui.queue_widget import QueueWidget
 from models.command import Command
 
 class MainWindow(Gtk.ApplicationWindow):
@@ -12,9 +13,11 @@ class MainWindow(Gtk.ApplicationWindow):
 
         # Root layout
         # ---
-        self.root = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.root = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         self.set_child(self.root)
         # ---
+        
+        queue = QueueWidget()
         
         # List Search Widget
         # ---
@@ -24,6 +27,10 @@ class MainWindow(Gtk.ApplicationWindow):
         
         It's not an essential feature, so can add later on if we get time
         """
-        ListSearchWidget(self.root, commands)
+        list_searh = ListSearchWidget(commands, queue_ref=queue)
         # ---
+        
+        self.root.append(list_searh())
+        self.root.append(queue())
+        
     # ---
