@@ -8,7 +8,7 @@ from models.command import Command
 class QueueWidget:
 	# Constructor
 	# ---
-	def __init__(self, root):
+	def __init__(self):
 
 		# Create a CSS provider and add it to the display
 		style_provider = Gtk.CssProvider()
@@ -27,14 +27,13 @@ class QueueWidget:
 
 		# Widget Containers
 		# ---
-		main_hbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
+		self.main_hbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=6)
 		# ---
 
 		#ListStore with commands from backend (For example) PS. Switched from ListBox to ListStore, because ListStore has more functionality and only renders item that are visible, making performance imensly better. Meaning we can have 100,000+ commands without lagging
 		# ---
 		self.list_store = Gio.ListStore(item_type=self.CommandObj)
-		for i in range(10):
-			self.list_store.append(self.CommandObj(Command(f"Item {i+1}")))
+		self.list_store.append(self.CommandObj(Command(f"Add More Items")))
 		# ---
 
 		# List Item Factory
@@ -58,10 +57,11 @@ class QueueWidget:
 
 		# Append to root
 		# ---
-		main_hbox.append(self.scroll)
-
-		root.append(main_hbox)
+		self.main_hbox.append(self.scroll)
 		# ---
+
+	def __call__(self):
+		return self.main_hbox
 
 	class CommandObj(GObject.Object):
 		# Command Variables
@@ -99,7 +99,7 @@ class QueueWidget:
 		handle.add_controller(drag_source)
 
 		# DROP TARGET (Attached to the whole BOX for better hit area)
-		drop_target = Gtk.DropTarget.new(GObject.TYPE_UINT, Gdk.DragAction.MOVE)
+		drop_target = Gtk.DropTarget.new(GObject.TYPE_INT, Gdk.DragAction.MOVE)
 		drop_target.connect("enter", self.on_drag_enter)
 		drop_target.connect("motion", self.on_drag_motion, list_item)
 		drop_target.connect("leave", self.on_drag_leave, list_item)
@@ -162,3 +162,6 @@ class QueueWidget:
 		self.list_store.remove(source_pos)
 		self.list_store.insert(insert_idx, item)
 		return True
+
+	def add_command(self, command):
+		self.list_store.append(self.CommandObj(command))

@@ -17,6 +17,8 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_child(self.root)
         # ---
         
+        queue = QueueWidget()
+        
         # List Search Widget
         # ---
         """
@@ -25,8 +27,10 @@ class MainWindow(Gtk.ApplicationWindow):
         
         It's not an essential feature, so can add later on if we get time
         """
-        ListSearchWidget(self.root, commands)
+        list_searh = ListSearchWidget(commands, queue_ref=queue)
         # ---
         
-        QueueWidget(self.root)
+        self.root.append(list_searh())
+        self.root.append(queue())
+        
     # ---
