@@ -106,7 +106,7 @@ class ListSearchWidget:
 		# ---
 		# Add To Queue
 		# ---
-		self.add_queue_btn = Gtk.Button(label="Add To Queue", icon_name="list-add-symbolic")
+		self.add_queue_btn = Gtk.Button(label="Add To Queue", icon_name="go-next-symbolic")
 		self.add_queue_btn.add_css_class("suggested-action")
 		self.add_queue_btn.connect("clicked", self.on_add_queue_clicked)
 		# ---
@@ -163,6 +163,21 @@ class ListSearchWidget:
 	def on_add_queue_clicked(self, btn):
 		"""Needs to be added"""
 
+	def on_load_clicked(self):
+		path = self.file_dialog.open()
+		if path:
+			self.workspace.load(path)
+			self.refresh_ui()
+
+	def on_save_clicked(self):
+		self.workspace.save()
+
+	def on_save_as_clicked(self):
+	    path = self.file_dialog.save()
+	
+	    if path:
+	        self.workspace.save_as(path)
+
 	def setup_list_item(self, factory, list_item):
 		box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=20)
 		box.add_css_class("command-row")
@@ -215,4 +230,4 @@ class ListSearchWidget:
 		if not query:
 			return True
 		# Fast comparison using pre-processed tag
-		return query in item.search_tag
+		return query in item.search_tag.lower()

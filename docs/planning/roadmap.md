@@ -34,31 +34,16 @@ Build a Linux-focused GTK application that manages and executes command workflow
 
 # DATA STRUCTURES (CORE REQUIREMENTS)
 
-## 1. Queue (DONE, refine later)
+## 1. Dequeue (DONE, refine later)
 
 * [x] FIFO execution using deque
-* [ ] Ability to:
-
+* [x] Ability to:
   * [x] Add while running
   * [x] Pause/resume queue
-  * [ ] Inspect queue state (for UI)
+  * [x] Inspect queue state (for UI)
 
----
-
-## 2. Stack (UNDO SYSTEM) - HIGH PRIORITY
-
-Implement command history:
-
-* [ ] Add stack:
-
-  * push when command added
 * [ ] Undo last command
 * [ ] Redo (optional second stack)
-
-### Outcome:
-
-* Undo button in UI
-* Strong DSA justification
 
 ---
 
@@ -79,7 +64,7 @@ Implement command/project lookup:
 
 ## 4. Searching
 
-* [ ] Search commands by name
+* [x] Search commands by name
 * [ ] Filter command list in UI
 
 ### Optional:
@@ -88,7 +73,7 @@ Implement command/project lookup:
 
 ---
 
-## 5. Sorting
+## 5. Sorting (OPTIONAL)
 
 * [ ] Sort commands:
 
@@ -111,10 +96,12 @@ Only if time allows:
 
 ## Phase 1: Basic UI
 
-* [ ] Main window
-* [ ] Command list display
-* [ ] Add/remove command buttons
-* [ ] Checkbox: external execution
+* [x] Main window
+* [ ] Dequeue window
+* [x] Command list display
+* [x] Add/remove command buttons
+* [x] Checkbox: external execution
+* [x] Checkbox: keep open
 
 ---
 
@@ -128,9 +115,8 @@ Only if time allows:
 
 ## Phase 3: Advanced UI
 
-* [ ] Undo button (stack)
-* [ ] Search bar
-* [ ] Sorting controls
+* [ ] Undo button
+* [x] Search bar
 * [ ] Project selector (hash table)
 
 ---
@@ -151,11 +137,11 @@ Only if time allows:
 
 # TESTING
 
-* [ ] Test sequential execution
-* [ ] Test parallel execution
-* [ ] Test queue behavior
+* [x] Test sequential execution
+* [x] Test parallel execution
+* [x] Test queue behavior
 * [ ] Test undo system
-* [ ] Test registry lookup
+* [x] Test registry lookup
 
 ---
 

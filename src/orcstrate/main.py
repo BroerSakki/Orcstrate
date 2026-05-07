@@ -8,7 +8,7 @@ commands = [
     Command("echo 'Running internal command 1'"),
     Command("sleep 5", external=True),
     Command("echo 'Back to internal flow'"),
-    Command("ping -c 4 google.com", external=True),
+    Command("ping -c 4 google.com", external=True, keep_open=False),
     Command("sleep 2"),
     Command("ls /this/does/not/exist"),
     Command("echo '=== END ==='")
@@ -27,3 +27,6 @@ time.sleep(1)
 runner.add_to_queue(Command("echo added later"))
 
 runner.wait_until_done(True)
+
+app = App(commands)
+app.run()
