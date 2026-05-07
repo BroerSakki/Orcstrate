@@ -145,7 +145,7 @@ class ListSearchWidget:
 		def __init__(self,command: Command):
 			super().__init__()
 			self.command_text = command.command
-			self.search_tag = command.name.lower() # Should we make this case sensitive or no?
+			self.search_tag = command.name # Should we make this case sensitive or no?
 			self.external = command.external
 			self.keep_open = command.keep_open
 
