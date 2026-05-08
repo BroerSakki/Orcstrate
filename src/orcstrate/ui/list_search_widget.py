@@ -44,26 +44,38 @@ class ListSearchWidget:
 
 		#ListStore with commands from backend (For example) PS. Switched from ListBox to ListStore, because ListStore has more functionality and only renders item that are visible, making performance imensly better. Meaning we can have 100,000+ commands without lagging
 		# ---
+		self.command_map = {}
+
 		self.list_store = Gio.ListStore(item_type=self.CommandObj)
 		for command in commands:
-			self.list_store.append(self.CommandObj(command))
+			obj = self.CommandObj(command)
+			tag = obj.search_tag.lower() if obj.search_tag else ""
+
+			if tag:
+				if tag not in self.command_map:
+					self.command_map[tag] = []
+				self.command_map[tag].append(obj)
+
+				self.list_store.append(obj)
 		# ---
 
 		# Search Entry (Hashing functionality added)
 		# ---
+		self.search_timeout_id = None
 		self.search_entry = Gtk.SearchEntry()
 		self.search_entry.set_halign(Gtk.Align.CENTER)
 		self.search_entry.set_max_width_chars(20)
+		self.search_entry.connect("search-changed", self.on_search_changed)
 		# ---
 		# Set Custom Filter
 		# ---
-		custom_filter = Gtk.CustomFilter.new(self.filter_func, self.search_entry)
-		filter_model = Gtk.FilterListModel(model=self.list_store, filter=custom_filter)
+		self.custom_filter = Gtk.CustomFilter.new(self.filter_func, self.search_entry)
+		filter_model = Gtk.FilterListModel(model=self.list_store, filter=self.custom_filter)
 		# ---
 
 		# Set Filter Function on search change
 		# ---
-		self.search_entry.connect("search-changed", lambda x: custom_filter.changed(Gtk.FilterChange.DIFFERENT))
+		self.search_entry.connect("search-changed", lambda x: self.custom_filter.changed(Gtk.FilterChange.DIFFERENT))
 		# ---
 		# List Item Factory
 		# ---
@@ -148,14 +160,37 @@ class ListSearchWidget:
 			self.search_tag = command.name # Should we make this case sensitive or no?
 			self.external = command.external
 			self.keep_open = command.keep_open
+			# Keep track of the current tag to handle re-hashing
+			self.prev_tag = self.search_tag.lower() if self.search_tag else ""
 
 		def get_command(self):
 			return Command(self.command_text, self.external, self.keep_open, self.search_tag)
+		
+	def sync_map_on_change(self, obj, pspec):
+		"""Triggered whenever a search_tag property changes."""
+		new_tag = obj.search_tag.lower()
+		old_tag = obj.prev_tag
+
+		# 1. Remove the old entry from the map
+		if old_tag in self.command_map:
+			del self.command_map[old_tag]
+
+		# 2. Add the new entry (if not empty)
+		if new_tag:
+			self.command_map[new_tag] = obj
+			obj.prev_tag = new_tag # Update tracker for next change
 
 	def on_add_clicked(self, btn):
-		"""Appends a new blank command to the store."""
-		new_cmdObj = self.CommandObj(Command(""))
+		"""Appends to store and updates hash map."""
+		new_cmd = Command("")
+		new_cmdObj = self.CommandObj(new_cmd)
+
+		new_cmdObj.connect("notify::search_tag", self.sync_map_on_change)
+
 		self.list_store.append(new_cmdObj)
+		# Update hash map
+		if new_cmdObj.search_tag:
+			self.command_map[new_cmdObj.search_tag.lower()] = new_cmdObj
 		self.search_entry.set_text("") 
 		self.selection.set_selected(self.list_store.get_n_items() - 1)
 
@@ -163,6 +198,12 @@ class ListSearchWidget:
 		"""Remove selected item"""
 		selected_item = self.selection.get_selected_item()
 		if selected_item:
+			# Remove from hash map
+			tag_key = selected_item.search_tag.lower()
+			if tag_key in self.command_map:
+				print("Delete from hash")
+				del self.command_map[tag_key]
+
 			found, index = self.list_store.find(selected_item)
 			if found:
 				self.list_store.remove(index)
@@ -225,9 +266,53 @@ class ListSearchWidget:
 		keep_check = ext_check.get_next_sibling()
 
 		item.bind_property("command_text", cmd_edit, "text", GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
-		item.bind_property("search_tag", tag_edit, "text", GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
+		item.bind_property("search_tag", tag_edit, "text", GObject.BindingFlags.SYNC_CREATE)
+		tag_edit.connect("notify::editing", self.on_tag_editing_toggled, item)
 		item.bind_property("external", ext_check, "active", GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
 		item.bind_property("keep_open", keep_check, "active", GObject.BindingFlags.BIDIRECTIONAL | GObject.BindingFlags.SYNC_CREATE)
+
+	def on_tag_editing_toggled(self, label, pspec, item):
+		"""Fires only when the user finishes typing."""
+		if not label.get_editing():
+			new_tag = label.get_text().strip().lower()
+			old_tag = item.prev_tag
+
+			if new_tag == old_tag:
+				return
+
+			# 1. Remove from the old tag's list
+			if old_tag in self.command_map:
+				if item in self.command_map[old_tag]:
+					self.command_map[old_tag].remove(item)
+				# Cleanup key if list is empty
+				if not self.command_map[old_tag]:
+					self.command_map.pop(old_tag)
+
+			# 2. Add to the new tag's list
+			if new_tag:
+				if new_tag not in self.command_map:
+					self.command_map[new_tag] = []
+				self.command_map[new_tag].append(item)
+
+			# 3. Update the object and tracking state
+			item.search_tag = new_tag
+			item.prev_tag = new_tag
+
+			# 4. Refresh UI
+			self.custom_filter.changed(Gtk.FilterChange.DIFFERENT)
+
+	def on_search_changed(self, entry):
+		# Cancel existing timer if user is still typing
+		if self.search_timeout_id:
+			GObject.source_remove(self.search_timeout_id)
+
+		# Wait 300ms after last keystroke before filtering
+		self.search_timeout_id = GObject.timeout_add(300, self.trigger_filter)
+
+	def trigger_filter(self):
+		self.custom_filter.changed(Gtk.FilterChange.DIFFERENT)
+		self.search_timeout_id = None
+		return False # Stop the timer from repeating
 
 	def print_data(self, btn):
 		print("\n--- Current Command List Data ---")
@@ -236,8 +321,15 @@ class ListSearchWidget:
 			print(f"[{i}] '{obj.command_text}' (Tag: {obj.search_tag}) | Ext: {obj.external} | Keep: {obj.keep_open}")
 
 	def filter_func(self, item, search_entry):
+		"""Utilizes hashing for high-speed filtering."""
 		query = search_entry.get_text().lower()
 		if not query:
 			return True
-		# Fast comparison using pre-processed tag
+	
+		# O(1) Lookup: Get the list of items for this tag
+		matches = self.command_map.get(query)
+		if matches is not None:
+			return item in matches
+
+		# Fallback: Prefix/Partial match (Standard search)
 		return query in item.search_tag.lower()
