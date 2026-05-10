@@ -5,6 +5,9 @@ gi.require_version("Gio", "2.0")
 from gi.repository import Gtk, Gio
 from ui.window import MainWindow
 from models.command import Command
+from core.queue_service import QueueService
+from core.command_service import CommandService
+from core.workspace import Workspace
 
 def is_dark_mode():
     """Detects dark mode on Linux and Windows (MSYS2)."""
@@ -55,8 +58,23 @@ class App(Gtk.Application):
     # App runner
     # ---
     def do_activate(self):
-        win = MainWindow(self, self.commands)
-        
+        self.command_service = CommandService(
+            self.commands
+        )
+
+        self.workspace = Workspace(
+            self.command_service
+        )
+
+        queue_service = QueueService()
+
+        win = MainWindow(
+            self,
+            self.command_service,
+            queue_service,
+            self.workspace
+        )
+
         update_theme_class(win)
 
         win.present()

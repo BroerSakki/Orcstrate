@@ -37,18 +37,18 @@ class CommandRunner:
     # Execution contexts
     # ---
     def run_internal(self, cmd: str):
-        print(f"[INTERNAL] {cmd}")
+        print(f"\n[INTERNAL] {cmd}")
 
         process:subprocess.Popen = subprocess.Popen(cmd, shell=True)
         process.wait()
 
         if process.returncode != 0:
-            print(f"[ERROR] Command failed: {cmd}")
+            print(f"\n[ERROR] Command failed: {cmd}")
 
         return process
 
     def run_external(self, cmd:str, keep_open:bool=True):
-        print(f"[EXTERNAL] {cmd}")
+        print(f"\n[EXTERNAL] {cmd}")
 
         os_name = platform.system()
 
@@ -58,15 +58,15 @@ class CommandRunner:
             full_cmd:str = cmd
 
         if os_name == "Windows":
-            print("[INFO] Mintty Terminal")
+            print("\n[INFO] Mintty Terminal")
             terminal = "mintty"
             terminal_args = ["-e", "bash", "-c", full_cmd]
         else:
-            print("[INFO] XFCE Terminal")
+            print("\n[INFO] XFCE Terminal")
             terminal = "xfce4-terminal"
             terminal_args = ["-e", f'bash -c "{full_cmd}"']
 
-        print(f"[INFO] Running {[terminal] + terminal_args}")
+        print(f"\n[INFO] Running {[terminal] + terminal_args}")
         process = subprocess.Popen(
             [terminal] + terminal_args,
             env=self.clean_env(),
@@ -80,10 +80,10 @@ class CommandRunner:
     # ---
     def run_queue(self):
         if self._running:
-            print("[INFO] Already running")
+            print("\n[INFO] Already running")
             return
         else:
-            print("[INFO] Starting worker")
+            print("\n[INFO] Starting worker")
 
         self._running = True
 
@@ -116,9 +116,9 @@ class CommandRunner:
     # ---
     def _run_worker(self):
         if self._running:
-            print("[INFO] Worker started\n")
+            print("\n[INFO] Worker started")
         else:
-            print("[INFO] Worker disconnected")
+            print("\n[INFO] Worker disconnected")
 
         while self._running:
 
@@ -136,23 +136,23 @@ class CommandRunner:
             else:
                 self.run_internal(cmd.command)
 
-            print("---")
+            print()
 
-        print("[INFO] Worker stopped")
+        print("\n[INFO] Worker stopped")
     # ---
 
     # Runtime management
     # ---
     def pause(self):
-        print("[INFO] Pausing worker")
+        print("\n[INFO] Pausing worker")
         self._paused = True
 
     def resume(self):
-        print("[INFO] Resuming worker")
+        print("\n[INFO] Resuming worker")
         self._paused = False
 
     def stop(self):
-        print("[INFO] Stopping worker")
+        print("\n[INFO] Stopping worker")
         self._running = False
 
     def wait_until_done(self, manual: bool = False):
