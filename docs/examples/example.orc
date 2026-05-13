@@ -73,7 +73,7 @@
     },
     {
         "command": "sudo apt update",
-        "external": true,
+        "external": false,
         "keep_open": false,
         "name": "APT Update"
     },
@@ -100,5 +100,17 @@
         "external": false,
         "keep_open": true,
         "name": "Prototype Message"
+    },
+    {
+        "command": "sudo apt upgrade -y",
+        "external": false,
+        "keep_open": false,
+        "name": "APT Upgrade"
+    },
+    {
+        "command": "sudo apt autoremove",
+        "external": false,
+        "keep_open": false,
+        "name": "Autoremove"
     }
 ]

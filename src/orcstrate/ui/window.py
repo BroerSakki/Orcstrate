@@ -21,11 +21,16 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_titlebar(header)
 
         save_btn = Gtk.Button(icon_name="document-save-symbolic")
+        save_as_btn = Gtk.Button(icon_name="document-save-as-symbolic")
         load_btn = Gtk.Button(icon_name="document-open-symbolic")
 
         save_btn.connect(
             "clicked",
             self.on_save_clicked
+        )
+        save_as_btn.connect(
+            "clicked",
+            self.on_save_as_clicked
         )
         load_btn.connect(
             "clicked",
@@ -34,6 +39,7 @@ class MainWindow(Gtk.ApplicationWindow):
 
         header.pack_start(load_btn)
         header.pack_start(save_btn)
+        header.pack_start(save_as_btn)
         
         self.set_margin_top(16)
         self.set_margin_bottom(16)
@@ -74,6 +80,15 @@ class MainWindow(Gtk.ApplicationWindow):
             self.load_workspace
         )
         dialog.show()
+
+    def on_save_as_clicked(self, btn):
+        dialog = SaveDialog(
+            self,
+            self.save_workspace
+        )
+
+        dialog.show()
+
     def on_save_dialog_response(
         self,
         dialog,
