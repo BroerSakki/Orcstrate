@@ -56,7 +56,7 @@ class MainWindow(Gtk.ApplicationWindow):
             queue_service
         )
         
-        terminal = TerminalWidget()
+        terminal = TerminalWidget(queue_service=queue_service)
 
         root.append(list_widget)
         root.append(queue_widget)

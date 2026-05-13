@@ -46,7 +46,7 @@ class QueueService:
             )
         ]
 
-    def run_queue(self):
+    def run_queue(self, terminal):
 
         runner = CommandRunner()
 
@@ -54,4 +54,4 @@ class QueueService:
             self.get_commands()
         )
 
-        runner.run_queue()
+        runner.run_queue(terminal)
