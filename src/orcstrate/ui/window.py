@@ -1,6 +1,7 @@
 from gi.repository import Gtk
 from ui.widgets.list_search.widget import ListSearchWidget
 from ui.widgets.queue_widget.widget import QueueWidget
+from ui.widgets.terminal_widget.widget import TerminalWidget
 from ui.dialogs.save_dialog import SaveDialog
 from ui.dialogs.load_dialog import LoadDialog
 
@@ -17,6 +18,11 @@ class MainWindow(Gtk.ApplicationWindow):
             orientation=Gtk.Orientation.VERTICAL,
             spacing=12
         )
+        root.set_margin_top(12)
+        root.set_margin_bottom(12)
+        root.set_margin_start(12)
+        root.set_margin_end(12)
+
         header = Gtk.HeaderBar()
         self.set_titlebar(header)
 
@@ -40,11 +46,6 @@ class MainWindow(Gtk.ApplicationWindow):
         header.pack_start(load_btn)
         header.pack_start(save_btn)
         header.pack_start(save_as_btn)
-        
-        self.set_margin_top(16)
-        self.set_margin_bottom(16)
-        self.set_margin_start(16)
-        self.set_margin_end(16)
 
         self.set_child(root)
 
@@ -55,8 +56,11 @@ class MainWindow(Gtk.ApplicationWindow):
             queue_service
         )
 
+        terminal_widget = TerminalWidget()
+
         root.append(list_widget)
         root.append(queue_widget)
+        root.append(terminal_widget)
 
     # Event handlers
     # ---

@@ -24,11 +24,6 @@ class QueueWidget(Gtk.Box):
         self.set_hexpand(True)
         self.set_vexpand(True)
 
-        self.set_margin_top(12)
-        self.set_margin_bottom(12)
-        self.set_margin_start(12)
-        self.set_margin_end(12)
-
         self.factory = QueueFactory()
 
         self.selection = Gtk.SingleSelection(
