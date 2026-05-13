@@ -118,6 +118,10 @@ class ListSearchWidget(Gtk.Box):
             self.on_add_queue_clicked
         )
         self.sidebar.connect(
+            "queue-all-clicked",
+            self.on_queue_all_clicked
+        )
+        self.sidebar.connect(
             "edit-clicked",
             self.on_edit_clicked
         )
@@ -173,6 +177,14 @@ class ListSearchWidget(Gtk.Box):
         self.queue_service.add(
             selected.get_command()
         )
+
+    def on_queue_all_clicked(self, btn):
+        if not self.command_service:
+            return
+        
+        print("\n[INFO] Adding all commands")
+        for command in self.command_service.get_commands():
+            self.queue_service.add(command=command)
 
     def on_edit_clicked(self, btn):
 
