@@ -16,12 +16,21 @@
 }
 
 .suggested-action {
-	background: #26a269;
+	background: rgba(38, 162, 105, 0.85);
 	color: white;
 	font-weight: bold;
 }
 .suggested-action:hover {
-	background: #218c5a;
+	background: rgba(33, 140, 90, 0.9);
+}
+
+.destructive-action {
+	background: rgba(224, 27, 36, 0.85);
+	color: white;
+	font-weight: bold;
+}
+.destructive-action:hover {
+	background: rgba(192, 23, 31, 0.9);
 }
 
 /* Overall Row Styling */
@@ -111,29 +120,29 @@ listview row:selected .tag-field {
 
 /* Glow effects for dark mode */
 .dark-mode .sidebar button {
-    background-color: #1e1e1e;
+    background-color: rgba(30, 30, 30, 0.85);
     color: #eeeeec;
     border: 1px solid transparent;
 }
 
 .dark-mode .sidebar button.suggested-action {
-    border: 1px solid rgba(38, 162, 105, 0.4);
-    box-shadow: 0 0 8px rgba(38, 162, 105, 0.2);
-    background: #1e1e1e; /* Overriding the solid green */
+    border: 1px solid rgba(38, 162, 105, 0.3);
+    box-shadow: 0 0 8px rgba(38, 162, 105, 0.15);
+    background: rgba(30, 30, 30, 0.85);
 }
 
 .dark-mode .sidebar button.suggested-action:hover {
-    border: 1px solid rgba(38, 162, 105, 0.8);
-    box-shadow: 0 0 12px rgba(38, 162, 105, 0.4);
+    border: 1px solid rgba(38, 162, 105, 0.6);
+    box-shadow: 0 0 12px rgba(38, 162, 105, 0.3);
 }
 
 .dark-mode .sidebar button.destructive-action {
-    border: 1px solid rgba(224, 27, 36, 0.4);
-    box-shadow: 0 0 8px rgba(224, 27, 36, 0.2);
-    background: #1e1e1e;
+    border: 1px solid rgba(224, 27, 36, 0.3);
+    box-shadow: 0 0 8px rgba(224, 27, 36, 0.15);
+    background: rgba(30, 30, 30, 0.85);
 }
 
 .dark-mode .sidebar button.destructive-action:hover {
-    border: 1px solid rgba(224, 27, 36, 0.8);
-    box-shadow: 0 0 12px rgba(224, 27, 36, 0.4);
+    border: 1px solid rgba(224, 27, 36, 0.6);
+    box-shadow: 0 0 12px rgba(224, 27, 36, 0.3);
 }

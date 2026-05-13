@@ -2,12 +2,13 @@ import gi
 import sys
 gi.require_version("Gtk", "4.0")
 gi.require_version("Gio", "2.0")
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk, Gio, Gdk
 from ui.window import MainWindow
 from models.command import Command
 from core.queue_service import QueueService
 from core.command_service import CommandService
 from core.workspace import Workspace
+import os
 
 def is_dark_mode():
     """Detects dark mode on Linux and Windows (MSYS2)."""
@@ -73,6 +74,19 @@ class App(Gtk.Application):
             self.command_service,
             queue_service,
             self.workspace
+        )
+
+        # Load custom stylesheet
+        css_path = os.path.join(
+            os.path.dirname(__file__),
+            "ui", "styles", "list_search_widget.css"
+        )
+        provider = Gtk.CssProvider()
+        provider.load_from_path(css_path)
+        Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
 
         update_theme_class(win)
