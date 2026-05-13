@@ -4,6 +4,7 @@ from gi.repository import Gtk
 from gi.repository import Gio
 from ui.widgets.list_search.factory import ListSearchFactory
 from ui.widgets.list_search.filtering import SearchFiltering
+from ui.widgets.list_search.drag_drop import ListSearchDragDrop
 
 
 class ListSearchContentBox(Gtk.Box):
@@ -36,14 +37,21 @@ class ListSearchContentBox(Gtk.Box):
             filter=self.filtering.get_filter()
         )
 
-        # Factory
-        self.factory = ListSearchFactory(
-            self.filtering
-        )
-
         # Selection
         self.selection = Gtk.SingleSelection(
             model=filter_model
+        )
+
+        # Drag and drop
+        self.drag_handler = ListSearchDragDrop(
+            self.model,
+            self.selection
+        )
+
+        # Factory
+        self.factory = ListSearchFactory(
+            self.filtering,
+            drag_handler=self.drag_handler
         )
 
         # List view

@@ -29,11 +29,6 @@ class ListSearchWidget(Gtk.Box):
         self.set_hexpand(True)
         self.set_vexpand(True)
 
-        self.set_margin_top(12)
-        self.set_margin_bottom(12)
-        self.set_margin_start(12)
-        self.set_margin_end(12)
-
         self.model = self.command_service.get_model()
 
         self.build_ui()

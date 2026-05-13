@@ -9,7 +9,6 @@ from core.runner import CommandRunner
 from core.queue_service import QueueService
 from ui.widgets.queue_widget.factory import QueueFactory
 from ui.widgets.queue_widget.buttons import QueueButtonBox
-from ui.widgets.queue_widget.drag_drop import QueueDragDrop
 
 
 class QueueWidget(Gtk.Box):
@@ -25,18 +24,7 @@ class QueueWidget(Gtk.Box):
         self.set_hexpand(True)
         self.set_vexpand(True)
 
-        self.set_margin_top(12)
-        self.set_margin_bottom(12)
-        self.set_margin_start(12)
-        self.set_margin_end(12)
-
-        self.drag_handler = QueueDragDrop(
-            self.queue_service.get_model()
-        )
-
-        self.factory = QueueFactory(
-            self.drag_handler
-        )
+        self.factory = QueueFactory()
 
         self.selection = Gtk.SingleSelection(
             model=self.queue_service.get_model()

@@ -16,14 +16,6 @@ class QueueRow(Gtk.Box):
         self.set_margin_start(8)
         self.set_margin_end(8)
 
-        self.handle = Gtk.Image.new_from_icon_name(
-            "open-menu-symbolic"
-        )
-
-        self.handle.add_css_class("drag-handle")
-
-        self.append(self.handle)
-
         self.command_label = Gtk.Label(
             xalign=0,
             hexpand=True

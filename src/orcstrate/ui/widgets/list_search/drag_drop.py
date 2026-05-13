@@ -3,10 +3,11 @@ from gi.repository import Gdk
 from gi.repository import GObject
 
 
-class QueueDragDrop:
+class ListSearchDragDrop:
 
-    def __init__(self, list_store):
-        self.list_store = list_store
+    def __init__(self, source_model, selection_model):
+        self.source_model = source_model
+        self.selection_model = selection_model
 
     def setup_drag_and_drop(
         self,
@@ -149,6 +150,7 @@ class QueueDragDrop:
             list_item
         )
 
+        # Resolve the destination position in the filter/selection model
         dest_pos = list_item.get_position()
 
         row = list_item.get_child()
@@ -156,28 +158,50 @@ class QueueDragDrop:
         if y > row.get_allocated_height() / 2:
             dest_pos += 1
 
-        if (
-            source_pos == dest_pos
-            or
-            source_pos == dest_pos - 1
-        ):
+        # Get the actual item at the source position
+        item = self.selection_model.get_item(source_pos)
+
+        if item is None:
             return False
 
-        item = self.list_store.get_item(
-            source_pos
-        )
+        # Find the item's position in the source model
+        found, source_source_pos = self.source_model.find(item)
 
-        insert_idx = (
-            dest_pos
-            if dest_pos < source_pos
-            else dest_pos - 1
-        )
+        if not found:
+            return False
 
-        self.list_store.remove(source_pos)
+        # Find the item at the destination position in the filter/selection model
+        # If dest_pos is beyond the filtered model, insert at the end
+        if dest_pos < self.selection_model.get_n_items():
+            dest_item = self.selection_model.get_item(dest_pos)
 
-        self.list_store.insert(
-            insert_idx,
-            item
-        )
+            if dest_item is not None:
+                found, dest_source_pos = self.source_model.find(dest_item)
+
+                if not found:
+                    return False
+            else:
+                # Append to end of source model
+                self.source_model.remove(source_source_pos)
+                self.source_model.append(item)
+                return True
+        else:
+            # Append to end of source model
+            self.source_model.remove(source_source_pos)
+            self.source_model.append(item)
+            return True
+
+        # Adjust insert index if the source was before the destination
+        if source_source_pos < dest_source_pos:
+            insert_idx = dest_source_pos - 1
+        else:
+            insert_idx = dest_source_pos
+
+        # Guard against out-of-bounds
+        if insert_idx < 0:
+            insert_idx = 0
+
+        self.source_model.remove(source_source_pos)
+        self.source_model.insert(insert_idx, item)
 
         return True
