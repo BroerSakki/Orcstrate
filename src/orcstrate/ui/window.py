@@ -1,6 +1,6 @@
 from gi.repository import Gtk
 from ui.widgets.list_search.widget import ListSearchWidget
-from ui.widgets.queue.widget import QueueWidget
+from ui.widgets.queue_widget.widget import QueueWidget
 from ui.dialogs.save_dialog import SaveDialog
 from ui.dialogs.load_dialog import LoadDialog
 
@@ -14,7 +14,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.set_default_size(1700, 800)
 
         root = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
+            orientation=Gtk.Orientation.VERTICAL,
             spacing=12
         )
         header = Gtk.HeaderBar()
