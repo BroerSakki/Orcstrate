@@ -20,6 +20,8 @@ sudo apt install -y \
     python3-gi \
     gir1.2-gtk-4.0 \
 	libglib2.0-dev \
-    xfce4-terminal
+    xfce4-terminal \
+    gir1.2-vte-3.91
+
 
 echo "[INFO] Setup complete! You can now run the project."

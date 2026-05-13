@@ -1,3 +1,5 @@
+import gi
+gi.require_version('Vte', '3.91')
 import os
 import subprocess
 import platform
@@ -5,6 +7,8 @@ import threading
 import time
 from collections import deque
 from models.command import Command
+from gi.repository import GLib
+from gi.repository import Vte
 
 class CommandRunner:
     # Constructer
@@ -36,16 +40,44 @@ class CommandRunner:
 
     # Execution contexts
     # ---
-    def run_internal(self, cmd: str):
+    def run_internal(self, cmd: str, terminal):
         print(f"\n[INTERNAL] {cmd}")
 
-        process:subprocess.Popen = subprocess.Popen(cmd, shell=True)
-        process.wait()
+        loop = GLib.MainLoop()
+        return_code = None
 
-        if process.returncode != 0:
+        def on_child_exited(term, exit_status):
+            nonlocal return_code
+            return_code = exit_status
+            loop.quit()
+
+        handler_id = terminal.connect("child-exited", on_child_exited)
+
+        shell_bin = os.environ.get("SHELL", "/bin/sh")
+        argv = [shell_bin, "-c", cmd, None]
+        working_dir = os.environ.get("HOME", "/")
+
+        terminal.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            working_dir,
+            argv,
+            None,
+            GLib.SpawnFlags.DEFAULT,
+            None, None,
+            -1,
+            None,
+            None,
+            None
+        )
+
+        loop.run()
+
+        terminal.disconnect(handler_id)
+
+        if return_code != 0:
             print(f"\n[ERROR] Command failed: {cmd}")
 
-        return process
+        return return_code
 
     def run_external(self, cmd:str, keep_open:bool=True):
         print(f"\n[EXTERNAL] {cmd}")
@@ -76,9 +108,12 @@ class CommandRunner:
         return process
     #---
 
+    def clear_vte_terminal(self, terminal):
+        terminal.reset(True, True)
+
     # Main runner
     # ---
-    def run_queue(self):
+    def run_queue(self, terminal):
         if self._running:
             print("\n[INFO] Already running")
             return
@@ -87,7 +122,8 @@ class CommandRunner:
 
         self._running = True
 
-        thread = threading.Thread(target=self._run_worker)
+        self.clear_vte_terminal(terminal)
+        thread = threading.Thread(target=self._run_worker, args=(terminal,))
         thread.daemon = True
         thread.start()
     # ---
@@ -114,7 +150,7 @@ class CommandRunner:
 
     # Worker management
     # ---
-    def _run_worker(self):
+    def _run_worker(self, terminal):
         if self._running:
             print("\n[INFO] Worker started")
         else:
@@ -134,7 +170,7 @@ class CommandRunner:
             if cmd.external:
                 self.run_external(cmd.command, keep_open=cmd.keep_open)
             else:
-                self.run_internal(cmd.command)
+                self.run_internal(cmd.command, terminal)
 
             print()
 
