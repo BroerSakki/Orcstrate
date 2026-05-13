@@ -1,6 +1,5 @@
 from gi.repository import Gtk
-
-from ui.widgets.queue.row import QueueRow
+from ui.widgets.queue_widget.row import QueueRow
 
 
 class QueueFactory:

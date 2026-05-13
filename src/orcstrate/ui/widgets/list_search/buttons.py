@@ -1,7 +1,6 @@
 from gi.repository import Gtk, GObject
 
-
-class ListSearchSidebar(Gtk.Box):
+class ListSearchButtonBox(Gtk.Box):
     __gsignals__ = {
         "add-command-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "delete-selected-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
@@ -11,18 +10,24 @@ class ListSearchSidebar(Gtk.Box):
     }
 
     def __init__(self):
-
         super().__init__(
-            orientation=Gtk.Orientation.VERTICAL,
-            spacing=8
+            orientation=Gtk.Orientation.VERTICAL
         )
-
-        self.set_size_request(180, -1)
-        self.add_css_class("sidebar")
         self.build_ui()
 
     def build_ui(self):
-        # Create buttons
+        # Create Grid
+        # ---
+        self.button_grid = Gtk.Grid()
+        # ---
+
+        # Set Grid Spacing
+        # ---
+        self.button_grid.set_row_spacing(6)
+        self.button_grid.set_column_spacing(6)
+        # ---
+
+        # Create Buttons
         # ---
         self.add_btn = Gtk.Button(
             label="Add Command",
@@ -30,7 +35,7 @@ class ListSearchSidebar(Gtk.Box):
         )
         self.delete_btn = Gtk.Button(
             label="Delete Selected",
-            icon_name="user-trash-symbolic"
+            icon_name="list-remove-symbolic"
         )
         self.queue_btn = Gtk.Button(
             label="Add To Queue",
@@ -44,7 +49,7 @@ class ListSearchSidebar(Gtk.Box):
             label="Edit",
             icon_name="edit-symbolic"
         )
-        # ---        
+        # ---
 
         # Emit signals
         # ---
@@ -65,11 +70,28 @@ class ListSearchSidebar(Gtk.Box):
         )
         # ---
 
-        # Append buttons
+        # Format Buttons
         # ---
-        self.append(self.add_btn)
-        self.append(self.delete_btn)
-        self.append(self.queue_btn)
-        self.append(self.queue_all_btn)
-        self.append(self.edit_btn)
+        self.add_btn.set_size_request(-1, 48)
+        for btn in [
+            self.delete_btn,
+            self.queue_btn,
+            self.queue_all_btn,
+            self.edit_btn
+        ]:
+            btn.set_size_request(48, 48)
+        # ---
+
+        # Attach To Grid
+        # ---
+        self.button_grid.attach(self.add_btn, 0, 0, 2, 1)
+        self.button_grid.attach(self.delete_btn, 0, 1, 1, 1)
+        self.button_grid.attach(self.edit_btn, 1, 1, 1, 1)
+        self.button_grid.attach(self.queue_btn, 0, 2, 1, 1)
+        self.button_grid.attach(self.queue_all_btn, 1, 2, 1, 1)
+        # ---
+
+        # Append Grid To Box
+        # ---
+        self.append(self.button_grid)
         # ---

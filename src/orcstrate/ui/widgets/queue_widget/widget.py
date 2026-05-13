@@ -1,39 +1,22 @@
 import gi
-
+import time
 gi.require_version("Gtk", "4.0")
-
 from gi.repository import Gtk
 from gi.repository import Gio
-
-from models.command_object import (
-    CommandObject
-)
-
+from models.command_object import CommandObject
 from models.command import Command
-
-from core.runner import (
-    CommandRunner
-)
-
-from core.queue_service import (
-    QueueService
-)
-
-from ui.widgets.queue.factory import (
-    QueueFactory
-)
-
-from ui.widgets.queue.drag_drop import (
-    QueueDragDrop
-)
+from core.runner import CommandRunner
+from core.queue_service import QueueService
+from ui.widgets.queue_widget.factory import QueueFactory
+from ui.widgets.queue_widget.buttons import QueueButtonBox
+from ui.widgets.queue_widget.drag_drop import QueueDragDrop
 
 
 class QueueWidget(Gtk.Box):
-
     def __init__(self, queue_service):
 
         super().__init__(
-            orientation=Gtk.Orientation.VERTICAL,
+            orientation=Gtk.Orientation.HORIZONTAL,
             spacing=12
         )
 
@@ -67,54 +50,27 @@ class QueueWidget(Gtk.Box):
         self.build_ui()
 
     def build_ui(self):
-
+        # Create Content
+        # ---
         scroll = Gtk.ScrolledWindow(
             hexpand=True,
             vexpand=True
         )
-
         scroll.set_child(self.list_view)
+        self.buttons = QueueButtonBox()
+        # ---
 
+        # Connect Buttons
+        # ---
+        self.buttons.connect("run-clicked", self.on_play_clicked)
+        self.buttons.connect("delete-clicked", self.on_delete_selected)
+        # ---
+
+        # Append Content
+        # ---
         self.append(scroll)
-
-        button_box = Gtk.Box(
-            orientation=Gtk.Orientation.HORIZONTAL,
-            spacing=8
-        )
-
-        self.append(button_box)
-
-        play_btn = Gtk.Button(
-            label="Play Queue",
-            icon_name="media-playback-start-symbolic"
-        )
-
-        play_btn.add_css_class(
-            "suggested-action"
-        )
-
-        play_btn.connect(
-            "clicked",
-            self.on_play_clicked
-        )
-
-        button_box.append(play_btn)
-
-        delete_btn = Gtk.Button(
-            label="Remove",
-            icon_name="user-trash-symbolic"
-        )
-
-        delete_btn.add_css_class(
-            "destructive-action"
-        )
-
-        delete_btn.connect(
-            "clicked",
-            self.on_delete_selected
-        )
-
-        button_box.append(delete_btn)
+        self.append(self.buttons)
+        # ---
 
     def on_delete_selected(self, btn):
         selected:CommandObject = (
@@ -124,7 +80,6 @@ class QueueWidget(Gtk.Box):
             return
         print(f"\n[QUEUE] Removing command: {selected.get_command().command}")
         self.queue_service.remove(selected)
-
 
     def on_play_clicked(self, btn):
         self.queue_service.run_queue()

@@ -1,14 +1,31 @@
 import gi
 gi.require_version("Gtk", "4.0")
+
 from gi.repository import Gtk
 from gi.repository import Gio
+
 from models.command import Command
-from models.command_object import CommandObject
-from ui.widgets.list_search.factory import ListSearchFactory
-from ui.widgets.list_search.filtering import SearchFiltering
-from ui.widgets.list_search.buttons import ListSearchButtonBox
-from ui.widgets.list_search.content import ListSearchContentBox
-from ui.dialogs.command_dialog import CommandDialog
+
+from models.command_object import (
+    CommandObject
+)
+
+from ui.widgets.list_search.factory import (
+    ListSearchFactory
+)
+
+from ui.widgets.list_search.filtering import (
+    SearchFiltering
+)
+
+from ui.widgets.list_search.sidebar import (
+    ListSearchSidebar
+)
+
+from ui.dialogs.command_dialog import (
+    CommandDialog
+)
+
 
 class ListSearchWidget(Gtk.Box):
 
@@ -39,32 +56,31 @@ class ListSearchWidget(Gtk.Box):
         self.build_ui()
 
     def build_ui(self):
-        # Create Widgets
-        # ---
-        self.content = ListSearchContentBox(model=self.model)
-        self.buttons = ListSearchButtonBox()
 
-        self.buttons.set_valign(Gtk.Align.START)
-        # ---
+        
 
-        # Connect Buttons
+        # Sidebar
         # ---
-        self.buttons.connect(
+        self.sidebar = ListSearchSidebar()
+        self.sidebar.set_size_request(120, -1)
+        self.sidebar.add_css_class("sidebar")
+
+        self.sidebar.connect(
             "add-command-clicked",
             self.on_add_clicked
         )
-        self.buttons.connect(
+        self.sidebar.connect(
             "delete-selected-clicked",
             self.on_delete_selected)
-        self.buttons.connect(
+        self.sidebar.connect(
             "queue-clicked",
             self.on_add_queue_clicked
         )
-        self.buttons.connect(
+        self.sidebar.connect(
             "queue-all-clicked",
             self.on_queue_all_clicked
         )
-        self.buttons.connect(
+        self.sidebar.connect(
             "edit-clicked",
             self.on_edit_clicked
         )
@@ -76,14 +92,12 @@ class ListSearchWidget(Gtk.Box):
             orientation=Gtk.Orientation.HORIZONTAL,
             spacing=12
         )
-        content_box.append(self.content)
-        content_box.append(self.buttons)
-        self.append(content_box)
-        # ---
 
-        # Add Controllers
-        # ---
-        self.selection = self.content.selection
+        content_box.append(scroll)
+
+        content_box.append(self.sidebar)
+
+        self.append(content_box)
         # ---
 
     # Event handlers
