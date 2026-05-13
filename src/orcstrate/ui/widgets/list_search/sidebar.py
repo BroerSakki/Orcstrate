@@ -6,6 +6,7 @@ class ListSearchSidebar(Gtk.Box):
         "add-command-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "delete-selected-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "queue-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        "queue-all-clicked": (GObject.SignalFlags.RUN_FIRST, None, ()),
         "edit-clicked": (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
@@ -33,7 +34,11 @@ class ListSearchSidebar(Gtk.Box):
         )
         self.queue_btn = Gtk.Button(
             label="Add To Queue",
-            icon_name="go-next-symbolic"
+            icon_name="mail-reply-rtl-symbolic"
+        )
+        self.queue_all_btn = Gtk.Button(
+            label="Add All To Queue",
+            icon_name="mail-reply-all-symbolic-rtl"
         )
         self.edit_btn = Gtk.Button(
             label="Edit",
@@ -46,6 +51,7 @@ class ListSearchSidebar(Gtk.Box):
         self.add_btn.connect("clicked", lambda _: self.emit("add-command-clicked"))
         self.delete_btn.connect("clicked", lambda _: self.emit("delete-selected-clicked"))
         self.queue_btn.connect("clicked", lambda _: self.emit("queue-clicked"))
+        self.queue_all_btn.connect("clicked", lambda _: self.emit("queue-all-clicked"))
         self.edit_btn.connect("clicked", lambda _: self.emit("edit-clicked"))
         # ---
 
@@ -64,5 +70,6 @@ class ListSearchSidebar(Gtk.Box):
         self.append(self.add_btn)
         self.append(self.delete_btn)
         self.append(self.queue_btn)
+        self.append(self.queue_all_btn)
         self.append(self.edit_btn)
         # ---
