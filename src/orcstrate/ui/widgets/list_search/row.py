@@ -17,6 +17,15 @@ class CommandRow(Gtk.Box):
 
         self.add_css_class("command-row")
 
+        # Drag handle
+        self.handle = Gtk.Image.new_from_icon_name(
+            "open-menu-symbolic"
+        )
+
+        self.handle.add_css_class("drag-handle")
+
+        self.append(self.handle)
+
         # Command text
         self.command_edit = Gtk.Label()
 

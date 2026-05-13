@@ -10,10 +10,12 @@ class ListSearchFactory:
 
     def __init__(
         self,
-        filtering
+        filtering,
+        drag_handler=None
     ):
 
         self.filtering = filtering
+        self.drag_handler = drag_handler
 
         self.factory = Gtk.SignalListItemFactory()
 
@@ -39,6 +41,12 @@ class ListSearchFactory:
         row = CommandRow()
 
         list_item.set_child(row)
+
+        if self.drag_handler:
+            self.drag_handler.setup_drag_and_drop(
+                row,
+                list_item
+            )
 
     def bind(
         self,

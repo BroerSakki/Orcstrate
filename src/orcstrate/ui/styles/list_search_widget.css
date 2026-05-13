@@ -81,6 +81,25 @@ listview row:selected .tag-field {
     color: white;
 }
 
+/* Drop indicator styles for drag and drop */
+.drop-indicator-top {
+    border-top: 3px solid #3584e4;
+}
+
+.drop-indicator-bottom {
+    border-bottom: 3px solid #3584e4;
+}
+
+/* Drag handle style */
+.drag-handle {
+    margin-right: 4px;
+    opacity: 0.6;
+}
+
+.drag-handle:hover {
+    opacity: 1.0;
+}
+
 /* 2. DARK MODE OVERRIDES (Bottom of file) */
 .dark-mode {
     --row-hover: rgba(255, 255, 255, 0.05);

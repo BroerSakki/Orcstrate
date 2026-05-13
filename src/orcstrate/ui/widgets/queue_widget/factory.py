@@ -4,9 +4,7 @@ from ui.widgets.queue_widget.row import QueueRow
 
 class QueueFactory:
 
-    def __init__(self, drag_handler):
-
-        self.drag_handler = drag_handler
+    def __init__(self):
 
         self.factory = Gtk.SignalListItemFactory()
 
@@ -28,11 +26,6 @@ class QueueFactory:
         row = QueueRow()
 
         list_item.set_child(row)
-
-        self.drag_handler.setup_drag_and_drop(
-            row,
-            list_item
-        )
 
     def bind(self, factory, list_item):
 
