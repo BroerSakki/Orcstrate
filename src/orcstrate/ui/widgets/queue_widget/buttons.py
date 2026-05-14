@@ -28,7 +28,6 @@ class QueueButtonBox(Gtk.Box):
 
         # Emit signals
         # ---
-        self.run_btn.connect("clicked", lambda _: self.emit("run-clicked"))
         self.delete_btn.connect("clicked", lambda _: self.emit("delete-clicked"))
         # ---
 
@@ -44,13 +43,10 @@ class QueueButtonBox(Gtk.Box):
 
         # Format Buttons
         # ---
-        self.run_btn.set_size_request(102, 48)
-        self.run_btn.set_margin_bottom(6)
         self.delete_btn.set_size_request(102, 48)
         # ---
 
         # Append To Box
         # ---
-        self.append(self.run_btn)
         self.append(self.delete_btn)
         # ---
