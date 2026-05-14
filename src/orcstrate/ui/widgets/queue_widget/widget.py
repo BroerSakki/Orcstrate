@@ -12,7 +12,7 @@ from ui.widgets.queue_widget.buttons import QueueButtonBox
 
 
 class QueueWidget(Gtk.Box):
-    def __init__(self, queue_service):
+    def __init__(self, queue_service, terminal=None):
 
         super().__init__(
             orientation=Gtk.Orientation.HORIZONTAL,
@@ -20,6 +20,7 @@ class QueueWidget(Gtk.Box):
         )
 
         self.queue_service:QueueService = queue_service
+        self.terminal = terminal
 
         self.set_hexpand(True)
         self.set_vexpand(True)
@@ -51,6 +52,7 @@ class QueueWidget(Gtk.Box):
         # Connect Buttons
         # ---
         self.buttons.connect("delete-clicked", self.on_delete_selected)
+        self.buttons.connect("run-clicked", self.on_run_clicked)
         # ---
 
         # Append Content
@@ -67,3 +69,7 @@ class QueueWidget(Gtk.Box):
             return
         print(f"\n[QUEUE] Removing command: {selected.get_command().command}")
         self.queue_service.remove(selected)
+
+    def on_run_clicked(self, btn):
+        if self.terminal:
+            self.queue_service.run_queue(self.terminal)

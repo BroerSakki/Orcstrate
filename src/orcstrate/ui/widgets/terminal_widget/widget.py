@@ -5,7 +5,7 @@ from gi.repository import Gtk, Gdk, GLib, Vte
 import os
 
 from core.queue_service import QueueService
-from ui.widgets.terminal_widget.buttons import TerminalButtonBox
+
 
 class TerminalWidget(Gtk.Box):
 
@@ -16,23 +16,22 @@ class TerminalWidget(Gtk.Box):
         )
 
         self.set_hexpand(True)
-        self.set_vexpand(True)
+        self.set_vexpand(False)
 
         self.queue_service:QueueService = queue_service
 
-        self.terminal = Vte.Terminal(hexpand=True,vexpand=True)
+        self.terminal = Vte.Terminal(hexpand=True, vexpand=False)
+        self.terminal.set_size_request(-1, 100)
 
         self.spawn_async_terminal()
 
         self.build_ui()
 
     def build_ui(self):
-        self.buttons = TerminalButtonBox()
-
-        self.buttons.connect("run-clicked", self.on_play_clicked)
-
         self.append(self.terminal)
-        self.append(self.buttons)
+
+    def get_terminal(self):
+        return self.terminal
 
     def spawn_async_terminal(self):
         shell_bin = os.environ.get("SHELL", "/bin/sh")
@@ -51,6 +50,3 @@ class TerminalWidget(Gtk.Box):
             None,
             None
         )
-
-    def on_play_clicked(self, btn):
-        self.queue_service.run_queue(self.terminal)
