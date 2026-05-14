@@ -12,7 +12,7 @@
         "name": "Upgrade APT"
     },
     {
-        "command": "sudo apt autoremzove -y",
+        "command": "sudo apt autoremove -y",
         "external": false,
         "keep_open": false,
         "name": "Remove extras"
