@@ -6,9 +6,6 @@ import os
 
 from core.queue_service import QueueService
 
-from core.queue_service import QueueService
-from ui.widgets.terminal_widget.buttons import TerminalButtonBox
-
 class TerminalWidget(Gtk.Box):
 
     def __init__(self, queue_service):

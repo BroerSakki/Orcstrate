@@ -79,7 +79,7 @@ class App(Gtk.Application):
         # Load custom stylesheet
         css_path = os.path.join(
             os.path.dirname(__file__),
-            "ui", "styles", "list_search_widget.css"
+            "ui", "styles", "app.css"
         )
         provider = Gtk.CssProvider()
         provider.load_from_path(css_path)
