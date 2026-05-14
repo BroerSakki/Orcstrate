@@ -20,6 +20,7 @@ class TerminalWidget(Gtk.Box):
 		self.queue_service:QueueService = queue_service
 
 		self.terminal = Vte.Terminal()
+		self.terminal.set_height_request(100)
 
 		shell_bin = os.environ.get("SHELL", "/bin/sh")
 		argv = [shell_bin]

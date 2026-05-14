@@ -49,14 +49,17 @@ class MainWindow(Gtk.ApplicationWindow):
 
         self.set_child(root)
 
-        queue_widget = QueueWidget(queue_service=queue_service)
+        terminal_widget = TerminalWidget(queue_service=queue_service)
+
+        queue_widget = QueueWidget(
+            queue_service=queue_service,
+            terminal=terminal_widget.get_terminal()
+        )
 
         list_widget = ListSearchWidget(
             command_service,
             queue_service
         )
-
-        terminal_widget = TerminalWidget(queue_service=queue_service)
 
         root.append(list_widget)
         root.append(queue_widget)
