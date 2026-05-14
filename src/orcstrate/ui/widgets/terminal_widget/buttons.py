@@ -1,8 +1,8 @@
 from gi.repository import Gtk, GObject
 
-class QueueButtonBox(Gtk.Box):
+class TerminalButtonBox(Gtk.Box):
     __gsignals__ = {
-        "delete-clicked": (GObject.SignalFlags.RUN_FIRST, None, ())
+        "run-clicked": (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     def __init__(self):
@@ -14,30 +14,31 @@ class QueueButtonBox(Gtk.Box):
     def build_ui(self):
         # Create Buttons
         # ---
-        self.delete_btn = Gtk.Button(
-            label="Delete Selected",
-            icon_name="list-remove-symbolic"
+        self.run_btn = Gtk.Button(
+            label="Run Queue",
+            icon_name="media-playback-start-symbolic"
         )
         # ---
 
         # Emit signals
         # ---
-        self.delete_btn.connect("clicked", lambda _: self.emit("delete-clicked"))
+        self.run_btn.connect("clicked", lambda _: self.emit("run-clicked"))
         # ---
 
         # Add CSS
         # ---
-        self.delete_btn.add_css_class(
-            "destructive-action"
+        self.run_btn.add_css_class(
+            "suggested-action"
         )
         # ---
 
         # Format Buttons
         # ---
-        self.delete_btn.set_size_request(102, 48)
+        self.run_btn.set_size_request(102, 48)
+        self.run_btn.set_margin_bottom(6)
         # ---
 
         # Append To Box
         # ---
-        self.append(self.delete_btn)
+        self.append(self.run_btn)
         # ---

@@ -1,29 +1,56 @@
 import gi
 gi.require_version("Gtk", "4.0")
-from gi.repository import Gtk, Gdk
+gi.require_version('Vte', '3.91')
+from gi.repository import Gtk, Gdk, GLib, Vte
+import os
 
+from core.queue_service import QueueService
+from ui.widgets.terminal_widget.buttons import TerminalButtonBox
 
 class TerminalWidget(Gtk.Box):
-    """Placeholder terminal - a simple black box for layout preview."""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, queue_service):
+        super().__init__(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=12
+        )
 
         self.set_hexpand(True)
         self.set_vexpand(True)
-        self.set_size_request(-1, 250)
 
-        css = b"""
-        .terminal-box {
-            background-color: #000000;
-            border: 1px solid #333333;
-        }
-        """
-        provider = Gtk.CssProvider()
-        provider.load_from_data(css)
-        style_context = self.get_style_context()
-        style_context.add_provider(
-            provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        self.queue_service:QueueService = queue_service
+
+        self.terminal = Vte.Terminal(hexpand=True,vexpand=True)
+
+        self.spawn_async_terminal()
+
+        self.build_ui()
+
+    def build_ui(self):
+        self.buttons = TerminalButtonBox()
+
+        self.buttons.connect("run-clicked", self.on_play_clicked)
+
+        self.append(self.terminal)
+        self.append(self.buttons)
+
+    def spawn_async_terminal(self):
+        shell_bin = os.environ.get("SHELL", "/bin/sh")
+        argv = [shell_bin]
+        working_dir = os.environ.get("HOME", "/")
+
+        self.terminal.spawn_async(
+            Vte.PtyFlags.DEFAULT,
+            working_dir,
+            argv,
+            None,
+            GLib.SpawnFlags.DEFAULT,
+            None, None,
+            -1,
+            None,
+            None,
+            None
         )
-        style_context.add_class("terminal-box")
+
+    def on_play_clicked(self, btn):
+        self.queue_service.run_queue(self.terminal)

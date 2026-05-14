@@ -50,7 +50,6 @@ class QueueWidget(Gtk.Box):
 
         # Connect Buttons
         # ---
-        self.buttons.connect("run-clicked", self.on_play_clicked)
         self.buttons.connect("delete-clicked", self.on_delete_selected)
         # ---
 
@@ -68,6 +67,3 @@ class QueueWidget(Gtk.Box):
             return
         print(f"\n[QUEUE] Removing command: {selected.get_command().command}")
         self.queue_service.remove(selected)
-
-    def on_play_clicked(self, btn):
-        self.queue_service.run_queue()
